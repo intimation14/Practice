@@ -15,10 +15,16 @@ namespace WebApplication1.Controllers
         private FabricsEntities db = new FabricsEntities();
 
         // GET: Clients
-        public ActionResult Index()
+        public ActionResult Index(String search)
         {
             var client = db.Client.Include(c => c.Occupation);
-            
+
+            // 14-2修改 /Clients/Index 頁面，加上 FirstName 的搜尋功能
+            if (!string.IsNullOrEmpty(search))
+            {
+                client = client.Where(p => p.FirstName.Contains(search));
+            }
+
             client = client.OrderByDescending(c => c.ClientId).Take(10);
             return View(client.ToList());
         }
